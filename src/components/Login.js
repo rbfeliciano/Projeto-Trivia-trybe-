@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { setToken } from '../redux/actions/index';
 
 class Login extends React.Component {
   constructor() {
@@ -11,12 +13,7 @@ class Login extends React.Component {
     };
   }
 
-  onHandleChange = (event) => {
-    const { value, id } = event.target;
-    this.setState({ [id]: value }, () => this.checkInput());
-  }
-
-  checkInput() {
+  checkInput= () => {
     const { email, username } = this.state;
     const validation = /\S+@\S+\.\S+/;
     const minCharacters = 2;
@@ -25,6 +22,26 @@ class Login extends React.Component {
     } else {
       this.setState({ disabledBtn: true });
     }
+  }
+
+  onHandleChange = (event) => {
+    const { value, id } = event.target;
+    this.setState({ [id]: value }, () => this.checkInput());
+  }
+
+  onHandleClick = async () => {
+    const { dispatchSetToken } = this.props;
+    const urlTrivia = 'https://opentdb.com/api_token.php?command=request';
+    const response = await fetch(urlTrivia);
+    const tokenResponse = await response.json();
+    const { token } = tokenResponse;
+    dispatchSetToken(token);
+    // console.log(this.state)
+
+    localStorage.setItem('token', token);
+
+    // const { history } = this.props;
+    // history.push('/game');
   }
 
   render() {
@@ -69,7 +86,7 @@ class Login extends React.Component {
             type="button"
             disabled={ disabledBtn }
             data-testid="btn-play"
-            // onClick={ this.onHandleClick }
+            onClick={ this.onHandleClick }
           >
             Play
           </button>
@@ -82,6 +99,12 @@ class Login extends React.Component {
 Login.propTypes = {
   email: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
+  history: PropTypes.shape({ history: PropTypes.string }).isRequired,
+  dispatchSetToken: PropTypes.func.isRequired,
 };
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  dispatchSetToken: (token) => dispatch(setToken(token)),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
