@@ -1,4 +1,5 @@
 import React from 'react';
+import Header from '../components/Header';
 // import { connect } from 'react-redux';
 
 class Game extends React.Component {
@@ -6,7 +7,7 @@ class Game extends React.Component {
     // const { token } = this.props;
     return (
       <div>
-        <p>yayaya</p>
+        <Header />
       </div>
     );
   }

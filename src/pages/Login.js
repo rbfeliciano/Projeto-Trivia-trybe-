@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { setToken } from '../redux/actions/index';
+import { setToken, setName, setEmail } from '../redux/actions/index';
 
 class Login extends React.Component {
   constructor() {
@@ -35,12 +35,15 @@ class Login extends React.Component {
   }
 
   onHandleClick = async () => {
-    const { dispatchSetToken } = this.props;
+    const { dispatchSetToken, dispatchSetName, dispatchSetEmail } = this.props;
     const urlTrivia = 'https://opentdb.com/api_token.php?command=request';
     const response = await fetch(urlTrivia);
     const tokenResponse = await response.json();
     const { token } = tokenResponse;
+    const { username, email } = this.state;
     dispatchSetToken(token);
+    dispatchSetName(username);
+    dispatchSetEmail(email);
 
     localStorage.setItem('token', token);
 
@@ -118,10 +121,14 @@ Login.propTypes = {
   //   push: PropTypes.func.isRequired,
   // }).isRequired,
   dispatchSetToken: PropTypes.func.isRequired,
+  dispatchSetName: PropTypes.func.isRequired,
+  dispatchSetEmail: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   dispatchSetToken: (token) => dispatch(setToken(token)),
+  dispatchSetName: (name) => dispatch(setName(name)),
+  dispatchSetEmail: (email) => dispatch(setEmail(email)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
