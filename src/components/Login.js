@@ -29,6 +29,11 @@ class Login extends React.Component {
     this.setState({ [id]: value }, () => this.checkInput());
   }
 
+  goToSettings = () => {
+    const { history } = this.props;
+    history.push('/settings');
+  }
+
   onHandleClick = async () => {
     const { dispatchSetToken } = this.props;
     const urlTrivia = 'https://opentdb.com/api_token.php?command=request';
@@ -88,6 +93,16 @@ class Login extends React.Component {
             onClick={ this.onHandleClick }
           >
             Play
+          </button>
+          <button
+            className="bg-transparent hover:bg-blue-500 text-blue-700
+            font-semibold hover:text-white py-2 px-4 border border-blue-500
+            hover:border-transparent rounded"
+            type="button"
+            data-testid="btn-settings"
+            onClick={ this.goToSettings }
+          >
+            Settings
           </button>
         </form>
       </div>
