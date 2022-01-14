@@ -36,12 +36,11 @@ class Login extends React.Component {
     const tokenResponse = await response.json();
     const { token } = tokenResponse;
     dispatchSetToken(token);
-    // console.log(this.state)
 
     localStorage.setItem('token', token);
 
-    // const { history } = this.props;
-    // history.push('/game');
+    const { history } = this.props;
+    history.push('/game');
   }
 
   render() {
@@ -99,7 +98,10 @@ class Login extends React.Component {
 Login.propTypes = {
   email: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
-  history: PropTypes.shape({ history: PropTypes.string }).isRequired,
+  history: PropTypes.oneOfType(PropTypes.string).isRequired,
+  // history: PropTypes.shape({
+  //   push: PropTypes.func.isRequired,
+  // }).isRequired,
   dispatchSetToken: PropTypes.func.isRequired,
 };
 

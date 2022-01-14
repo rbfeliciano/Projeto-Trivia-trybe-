@@ -9,4 +9,8 @@ if (window.Cypress) {
   window.store = store;
 }
 
+if (process.env.NODE_ENV !== 'production') {
+  window.store = store;
+}
+
 export default store;

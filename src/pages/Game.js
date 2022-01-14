@@ -1,19 +1,19 @@
 import React from 'react';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 
 class Game extends React.Component {
   render() {
-    const { token } = this.props;
+    // const { token } = this.props;
     return (
       <div>
-        <p>{ token }</p>
+        <p>yayaya</p>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  token: state.loginReducer.token,
-});
+// const mapStateToProps = (state) => ({
+//   token: state.token.token,
+// });
 
-export default connect(mapStateToProps)(Game);
+export default Game;
