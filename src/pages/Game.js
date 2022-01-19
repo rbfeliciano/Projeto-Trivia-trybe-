@@ -3,9 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Header from '../components/Header';
-import {
-  setToken,
-} from '../redux/actions/index';
+import { setToken } from '../redux/actions/index';
 import Buttons from '../components/Buttons';
 
 class Game extends React.Component {
@@ -30,41 +28,18 @@ class Game extends React.Component {
       return newAnswer;
     });
 
-    // return (
-    //   <div data-testid="answer-options">
-    //     { infoQuestions
-    //         && this.randomAnwser(0).map((e, i) => (
-    //           (results[0].correct_answer === e)
-    //             ? <button data-testid={ c } type="button" key={ i }>{ e }</button>
-    //             : <button data-testid={ `${w}-${i}` } type="button" key={ i }>{ e }</button>))}
-    //   </div>
-    // )
-
     return newArrRandomAnswer;
   }
 
   shuffle = (array) => {
-    let tmp = array.length;
-    let current = array.length;
-    let top = array.length;
-    const one = 1;
-    if (top) {
-      while (top -= one) {
-        current = Math.floor(Math.random() * (top + 1));
-        tmp = array[current];
-        array[current] = array[top];
-        array[top] = tmp;
-      }
-    }
-    return array;
+    const numberRandom = 0.5;
+    const shuffled = array.sort(() => Math.random() - numberRandom);
+    return shuffled;
   }
 
   render() {
     const { infoQuestions } = this.props;
     const { results } = infoQuestions;
-    // const { correct } = this.state;
-    // const c = 'correct-answer';
-    // const w = 'wrong-answer';
     return (
       <div>
         <Header />
@@ -72,7 +47,7 @@ class Game extends React.Component {
           && <p data-testid="question-category">{ results[0].category }</p>}
         { infoQuestions
           && <p data-testid="question-text">{ results[0].question }</p>}
-        <Buttons randomAnwser={ this.randomAnwser() } />
+        <Buttons randomAnwser={ this.randomAnwser } />
       </div>
     );
   }
