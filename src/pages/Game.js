@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import {
   setToken,
 } from '../redux/actions/index';
+import Buttons from '../components/Buttons';
 
 class Game extends React.Component {
   randomAnwser = (n) => {
@@ -71,13 +72,7 @@ class Game extends React.Component {
           && <p data-testid="question-category">{ results[0].category }</p>}
         { infoQuestions
           && <p data-testid="question-text">{ results[0].question }</p>}
-        <div data-testid="answer-options">
-          { this.randomAnwser(0).map((e, i) => ((results[0].correct_answer === e)
-            ? <button data-testid={ c } type="button" key={ i }>{ e }</button>
-            : <button data-testid={ `${w}-${i}` } type="button" key={ i }>
-                { e }
-              </button>))}
-        </div>
+        <Buttons randomAnwser={ this.randomAnwser() } />
       </div>
     );
   }
