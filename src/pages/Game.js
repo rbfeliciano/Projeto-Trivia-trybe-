@@ -48,7 +48,7 @@ class Game extends React.Component {
     let top = array.length;
     const one = 1;
     if (top) {
-      while (top = top - one) {
+      while (top -= one) {
         current = Math.floor(Math.random() * (top + 1));
         tmp = array[current];
         array[current] = array[top];
@@ -74,7 +74,9 @@ class Game extends React.Component {
         <div data-testid="answer-options">
           { this.randomAnwser(0).map((e, i) => ((results[0].correct_answer === e)
             ? <button data-testid={ c } type="button" key={ i }>{ e }</button>
-            : <button data-testid={ `${w}-${i}` } type="button" key={ i }>{ e }</button>))}
+            : <button data-testid={ `${w}-${i}` } type="button" key={ i }>
+                { e }
+              </button>))}
         </div>
       </div>
     );
