@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { setToken, setName, setEmail } from '../redux/actions/index';
+import {
+  setToken,
+  setName,
+  setEmail,
+  setQuestions,
+} from '../redux/actions/index';
 
 class Login extends React.Component {
   constructor() {
@@ -35,24 +40,94 @@ class Login extends React.Component {
   }
 
   onHandleClick = async () => {
-    const { dispatchSetToken, dispatchSetName, dispatchSetEmail } = this.props;
+    const {
+      dispatchSetToken,
+      dispatchSetName,
+      dispatchSetEmail,
+      dispatchSetQuestions,
+    } = this.props;
+
+    const {
+      email,
+      username,
+    } = this.state;
+
+    dispatchSetEmail(email);
+    dispatchSetName(username);
+
+    const token = await this.getToken();
+    const questions = await this.getFetchQuestions(token);
+    const checkToken = await this.checkTokenTimeOut(questions);
+
+    if (checkToken) {
+      localStorage.setItem('token', token);
+      dispatchSetToken(token);
+      dispatchSetQuestions(questions);
+    } else {
+      const newToken = await this.getToken();
+      const newQuestion = await this.getFetchQuestions(newToken);
+      localStorage.setItem('token', newToken);
+      dispatchSetToken(newToken);
+      dispatchSetQuestions(newQuestion);
+
+      const { history } = this.props;
+      history.push('/game');
+    }
+  }
+
+  getToken = async () => {
     const urlTrivia = 'https://opentdb.com/api_token.php?command=request';
     const response = await fetch(urlTrivia);
     const tokenResponse = await response.json();
-    const { token } = tokenResponse;
-    const { username, email } = this.state;
-    dispatchSetToken(token);
-    dispatchSetName(username);
-    dispatchSetEmail(email);
-
-    localStorage.setItem('token', token);
-
-    const { history } = this.props;
-    history.push('/game');
+    return tokenResponse.token;
   }
 
+  getFetchQuestions = async (token) => {
+    const urlTriviaQuestions = `https://opentdb.com/api.php?amount=5&token=${token}`;
+    const response = await fetch(urlTriviaQuestions);
+    const questionResponse = await response.json();
+    return questionResponse;
+  }
+
+  checkTokenTimeOut = async (questions) => {
+    const timeoutResponse = 3;
+    const responseApi = questions.response_code;
+    return !responseApi === timeoutResponse;
+  }
+
+  // getFetchQuestions = async (workingToken) => {
+  //   console.log(this.state.currentToken);
+  //   const { currentToken } = this.state;
+  //   const urlTriviaQuestions = `https://opentdb.com/api.php?amount=5&token=${currentToken}`;
+  //   const response = await fetch(urlTriviaQuestions);
+  //   const questionResponse = await response.json();
+  //
+  //   this.checkTokenTimeOut(questionResponse, workingToken);
+  //
+  //   const { dispatchSetQuestions } = this.props;
+  //   dispatchSetQuestions(questionResponse);
+  // }
+  //
+  // checkTokenTimeOut = async (questions, workingToken) => {
+  //   const { dispatchSetToken } = this.props;
+  //   const timeoutResponse = 3;
+  //   // const responseApi = questions.response_code;
+  //   const responseApi = 3;
+  //   if (responseApi === timeoutResponse) {
+  //     const urlTrivia = 'https://opentdb.com/api_token.php?command=request';
+  //     const response = await fetch(urlTrivia);
+  //     const tokenResponse = await response.json();
+  //     const { token } = tokenResponse;
+  //
+  //     localStorage.setItem('token', token);
+  //     dispatchSetToken(token);
+  //   } else {
+  //     dispatchSetToken(workingToken);
+  //   }
+  // }
+
   render() {
-    const { email, username } = this.props;
+    // const { email, username } = this.props;
     const {
       disabledBtn,
     } = this.state;
@@ -68,7 +143,6 @@ class Login extends React.Component {
               type="text"
               placeholder="Email"
               data-testid="input-gravatar-email"
-              value={ email }
               onChange={ this.onHandleChange }
             />
           </div>
@@ -80,7 +154,6 @@ class Login extends React.Component {
               type="text"
               placeholder="Nome"
               data-testid="input-player-name"
-              value={ username }
               onChange={ this.onHandleChange }
             />
           </div>
@@ -114,21 +187,33 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-  email: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired,
-  history: PropTypes.oneOfType(PropTypes.string).isRequired,
+  // email: PropTypes.string.isRequired,
+  // username: PropTypes.string.isRequired,
+  history: PropTypes.oneOfType(PropTypes.string),
   // history: PropTypes.shape({
   //   push: PropTypes.func.isRequired,
   // }).isRequired,
   dispatchSetToken: PropTypes.func.isRequired,
   dispatchSetName: PropTypes.func.isRequired,
   dispatchSetEmail: PropTypes.func.isRequired,
+  // dispatchSetRequestToken: PropTypes.func.isRequired,
+  dispatchSetQuestions: PropTypes.func.isRequired,
+};
+
+Login.defaultProps = {
+  history: '',
 };
 
 const mapDispatchToProps = (dispatch) => ({
   dispatchSetToken: (token) => dispatch(setToken(token)),
   dispatchSetName: (name) => dispatch(setName(name)),
   dispatchSetEmail: (email) => dispatch(setEmail(email)),
+  // dispatchSetRequestToken: (request) => dispatch(setRequestToken(request)),
+  dispatchSetQuestions: (question) => dispatch(setQuestions(question)),
 });
 
-export default connect(null, mapDispatchToProps)(Login);
+const mapStateToProps = (state) => ({
+  infoQuestions: state.player.questions,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
