@@ -63,8 +63,8 @@ class Game extends React.Component {
     const { infoQuestions } = this.props;
     const { results } = infoQuestions;
     // const { correct } = this.state;
-    const c = 'correct-answer';
-    const w = 'wrong-answer';
+    // const c = 'correct-answer';
+    // const w = 'wrong-answer';
     return (
       <div>
         <Header />
