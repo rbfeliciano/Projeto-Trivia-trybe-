@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import { setToken } from '../redux/actions/index';
 import Buttons from '../components/Buttons';
+import ButtonGame from '../components/ButtonGame';
 import Timer from '../components/Timer';
+
 
 class Game extends React.Component {
   constructor(props) {
@@ -77,6 +79,9 @@ class Game extends React.Component {
           && <p data-testid="question-category">{ results[0].category }</p>}
         { infoQuestions
           && <p data-testid="question-text">{ results[0].question }</p>}
+
+        <Buttons randomAnwser={ this.randomAnwser } />
+        <ButtonGame />
         <Buttons
           randomAnwser={ this.randomAnwser }
           handleClick={ this.handleClick }
