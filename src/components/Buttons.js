@@ -1,27 +1,52 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import '../css/style.css';
 
 export class Buttons extends Component {
-  buttonCorrect = (e, i) => (
-    <button
-      data-testid="correct-answer"
-      type="button"
-      key={ i }
-    >
-      { e }
-    </button>
-  )
+  constructor(props) {
+    super(props);
 
-  buttonIncorrect = (e, i) => (
-    <button
-      data-testid={ `wrong-answer-${i}` }
-      type="button"
-      key={ i }
-    >
-      { e }
-    </button>
-  )
+    this.state = {
+      toggle: false,
+    };
+  }
+
+  handleClick = () => {
+    this.setState({
+      toggle: true,
+    });
+  }
+
+  buttonCorrect = (e, i) => {
+    const { toggle } = this.state;
+    return (
+      <button
+        data-testid="correct-answer"
+        type="button"
+        className={ toggle && 'correct' }
+        key={ i }
+        onClick={ this.handleClick }
+      >
+        { e }
+      </button>
+    );
+  }
+
+  buttonIncorrect = (e, i) => {
+    const { toggle } = this.state;
+    return (
+      <button
+        data-testid={ `wrong-answer-${i}` }
+        type="button"
+        className={ toggle && 'incorrect' }
+        key={ i }
+        onClick={ this.handleClick }
+      >
+        { e }
+      </button>
+    );
+  }
 
   render() {
     const { infoQuestions: { results }, randomAnwser } = this.props;
