@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import '../css/style.css';
 
 export class Buttons extends Component {
   buttonCorrect = (e, i) => (
     <button
       data-testid="correct-answer"
       type="button"
+      className="correct"
       key={ i }
     >
       { e }
@@ -17,6 +19,7 @@ export class Buttons extends Component {
     <button
       data-testid={ `wrong-answer-${i}` }
       type="button"
+      className="incorrect"
       key={ i }
     >
       { e }
