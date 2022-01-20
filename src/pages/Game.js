@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import { setToken } from '../redux/actions/index';
 import Buttons from '../components/Buttons';
+import ButtonGame from '../components/ButtonGame';
 
 class Game extends React.Component {
   randomAnwser = (n) => {
@@ -48,6 +49,7 @@ class Game extends React.Component {
         { infoQuestions
           && <p data-testid="question-text">{ results[0].question }</p>}
         <Buttons randomAnwser={ this.randomAnwser } />
+        <ButtonGame />
       </div>
     );
   }
