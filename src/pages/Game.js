@@ -5,8 +5,24 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import { setToken } from '../redux/actions/index';
 import Buttons from '../components/Buttons';
+import Timer from '../components/Timer';
 
 class Game extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      stopTime: false,
+      toggle: false,
+    };
+  }
+
+  handleClick = () => {
+    this.setState({
+      toggle: true,
+      stopTime: true,
+    });
+  }
+
   randomAnwser = (n) => {
     const { infoQuestions } = this.props;
     const { results } = infoQuestions;
@@ -38,16 +54,24 @@ class Game extends React.Component {
   }
 
   render() {
+    const { stopTime, toggle } = this.state;
     const { infoQuestions } = this.props;
     const { results } = infoQuestions;
     return (
       <div>
         <Header />
+        <Timer
+          stopTime={ stopTime }
+        />
         { infoQuestions
           && <p data-testid="question-category">{ results[0].category }</p>}
         { infoQuestions
           && <p data-testid="question-text">{ results[0].question }</p>}
-        <Buttons randomAnwser={ this.randomAnwser } />
+        <Buttons
+          randomAnwser={ this.randomAnwser }
+          handleClick={ this.handleClick }
+          toggle={ toggle }
+        />
       </div>
     );
   }
