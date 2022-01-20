@@ -4,29 +4,16 @@ import { connect } from 'react-redux';
 import '../css/style.css';
 
 export class Buttons extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      toggle: false,
-    };
-  }
-
-  handleClick = () => {
-    this.setState({
-      toggle: true,
-    });
-  }
-
   buttonCorrect = (e, i) => {
-    const { toggle } = this.state;
+    const { toggle, handleClick, disabled } = this.props;
     return (
       <button
         data-testid="correct-answer"
         type="button"
         className={ toggle && 'correct' }
         key={ i }
-        onClick={ this.handleClick }
+        onClick={ handleClick }
+        disabled={ disabled }
       >
         { e }
       </button>
@@ -34,14 +21,15 @@ export class Buttons extends Component {
   }
 
   buttonIncorrect = (e, i) => {
-    const { toggle } = this.state;
+    const { toggle, handleClick, disabled } = this.props;
     return (
       <button
         data-testid={ `wrong-answer-${i}` }
         type="button"
         className={ toggle && 'incorrect' }
         key={ i }
-        onClick={ this.handleClick }
+        onClick={ handleClick }
+        disabled={ disabled }
       >
         { e }
       </button>
@@ -68,6 +56,9 @@ const mapStateToProps = (state) => ({
 Buttons.propTypes = {
   randomAnwser: PropTypes.func.isRequired,
   infoQuestions: PropTypes.objectOf(PropTypes.string).isRequired,
+  toggle: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  handleClick: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps)(Buttons);
