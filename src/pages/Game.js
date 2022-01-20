@@ -13,6 +13,7 @@ class Game extends React.Component {
     this.state = {
       stopTime: false,
       toggle: false,
+      disabled: false,
     };
   }
 
@@ -20,6 +21,14 @@ class Game extends React.Component {
     this.setState({
       toggle: true,
       stopTime: true,
+    });
+  }
+
+  allTrues = () => {
+    this.setState({
+      toggle: true,
+      stopTime: true,
+      disabled: true,
     });
   }
 
@@ -54,7 +63,7 @@ class Game extends React.Component {
   }
 
   render() {
-    const { stopTime, toggle } = this.state;
+    const { stopTime, toggle, disabled } = this.state;
     const { infoQuestions } = this.props;
     const { results } = infoQuestions;
     return (
@@ -62,6 +71,7 @@ class Game extends React.Component {
         <Header />
         <Timer
           stopTime={ stopTime }
+          allTrues={ this.allTrues }
         />
         { infoQuestions
           && <p data-testid="question-category">{ results[0].category }</p>}
@@ -71,6 +81,7 @@ class Game extends React.Component {
           randomAnwser={ this.randomAnwser }
           handleClick={ this.handleClick }
           toggle={ toggle }
+          disabled={ disabled }
         />
       </div>
     );

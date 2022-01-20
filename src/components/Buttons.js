@@ -5,7 +5,7 @@ import '../css/style.css';
 
 export class Buttons extends Component {
   buttonCorrect = (e, i) => {
-    const { toggle, handleClick } = this.props;
+    const { toggle, handleClick, disabled } = this.props;
     return (
       <button
         data-testid="correct-answer"
@@ -13,6 +13,7 @@ export class Buttons extends Component {
         className={ toggle && 'correct' }
         key={ i }
         onClick={ handleClick }
+        disabled={ disabled }
       >
         { e }
       </button>
@@ -20,7 +21,7 @@ export class Buttons extends Component {
   }
 
   buttonIncorrect = (e, i) => {
-    const { toggle, handleClick } = this.props;
+    const { toggle, handleClick, disabled } = this.props;
     return (
       <button
         data-testid={ `wrong-answer-${i}` }
@@ -28,6 +29,7 @@ export class Buttons extends Component {
         className={ toggle && 'incorrect' }
         key={ i }
         onClick={ handleClick }
+        disabled={ disabled }
       >
         { e }
       </button>
@@ -55,6 +57,7 @@ Buttons.propTypes = {
   randomAnwser: PropTypes.func.isRequired,
   infoQuestions: PropTypes.objectOf(PropTypes.string).isRequired,
   toggle: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
   handleClick: PropTypes.func.isRequired,
 };
 

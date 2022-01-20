@@ -5,7 +5,7 @@ export class Timer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      segunds: 5,
+      segunds: 30,
     };
   }
 
@@ -13,14 +13,14 @@ export class Timer extends Component {
     this.startTimer();
   }
 
-  componentDidUpdate() {
-    const { stopTime } = this.props;
-    const { segunds } = this.state;
+  componentDidUpdate(_, prevState) {
+    const { stopTime, allTrues } = this.props;
     if (stopTime) {
       clearInterval(this.time);
     }
-    if (segunds === 0) {
+    if (prevState.segunds === 1) {
       clearInterval(this.time);
+      allTrues();
     }
   }
 
