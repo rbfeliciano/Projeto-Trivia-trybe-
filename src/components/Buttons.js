@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 import '../css/style.css';
 
 export class Buttons extends Component {
- /*  buttonCorrect = (e, i) => {
+  componentDidMount() {
+    const { randomAnwser } = this.props;
+    randomAnwser(0);
+  }
+
+  buttonCorrect = (e, i) => {
     const { toggle, handleClick, disabled } = this.props;
     return (
       <button
@@ -36,37 +41,30 @@ export class Buttons extends Component {
     );
   }
 
-  renderBottons = (n) => {
-    const { infoQuestions: { results }, randomAnwser } = this.props;
+  renderBottons = () => {
+    const { infoQuestions: { results }, answer } = this.props;
     const { infoQuestions } = this.props;
     return (
       <div data-testid="answer-options">
-        {infoQuestions && randomAnwser(n).map((e, i) => ((results[n].correct_answer === e)
+        {infoQuestions && answer.map((e, i) => ((results[0].correct_answer === e)
           ? this.buttonCorrect(e, i) : this.buttonIncorrect(e, i)
         ))}
       </div>
     );
-  } */
+  }
 
   render() {
-/*     const { infoQuestions: { results }, randomAnwser } = this.props;
-    const { infoQuestions } = this.props;
-    const { bottons } = this.state; */
     return (
       <div>
-       {/*  { bottons } */}
+        { this.renderBottons() }
       </div>
-      /*  {<div data-testid="answer-options">
-        {infoQuestions && randomAnwser(0).map((e, i) => ((results[0].correct_answer === e)
-          ? this.buttonCorrect(e, i) : this.buttonIncorrect(e, i)
-        ))}
-      </div>} */
     );
   }
 }
 
 const mapStateToProps = (state) => ({
   infoQuestions: state.player.questions,
+  answer: state.game.answer,
 });
 
 Buttons.propTypes = {
@@ -75,6 +73,7 @@ Buttons.propTypes = {
   toggle: PropTypes.bool.isRequired,
   disabled: PropTypes.bool.isRequired,
   handleClick: PropTypes.func.isRequired,
+  answer: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default connect(mapStateToProps)(Buttons);

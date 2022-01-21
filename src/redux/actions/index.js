@@ -46,3 +46,10 @@ export const resetScore = (payload) => ({
   type: RESET_SCORE,
   payload,
 });
+
+export const SET_RANDOM_ANSWER = 'SET_RANDOM_ANSWER';
+
+export const setRandomAnswer = (payload) => ({
+  type: SET_RANDOM_ANSWER,
+  payload,
+});

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Header from '../components/Header';
-import { setToken, setScore } from '../redux/actions/index';
+import { setToken, setScore, setRandomAnswer } from '../redux/actions/index';
 import Buttons from '../components/Buttons';
 import ButtonGame from '../components/ButtonGame';
 import Timer from '../components/Timer';
@@ -67,20 +67,13 @@ class Game extends React.Component {
         break;
       }
     };
-    console.log(result(), 'sou o result');
 
     if (target.className === 'correct') {
-      console.log(target, ' sou o target');
-      console.log(target.className, 'sou o class name');
       addPoint(result());
       this.handleLocalStorage(result(), target);
-      console.log(addPoint(result()), 'sou o point');
     } else {
-      console.log(target, ' sou o target');
-      console.log(target.className, 'sou o class name');
       addPoint(0);
       this.handleLocalStorage(0, target);
-      console.log(addPoint(0), 'sou o point');
     }
   }
 
@@ -114,7 +107,7 @@ class Game extends React.Component {
   }
 
   randomAnwser = (n) => {
-    const { infoQuestions } = this.props;
+    const { infoQuestions, dispatchSetRandomAnswer } = this.props;
     const { results } = infoQuestions;
     const arrRandomAnswer = [
       results[n].correct_answer,
@@ -133,7 +126,7 @@ class Game extends React.Component {
       return newAnswer;
     });
 
-    return newArrRandomAnswer;
+    dispatchSetRandomAnswer(newArrRandomAnswer);
   }
 
   shuffle = (array) => {
@@ -142,7 +135,7 @@ class Game extends React.Component {
     return shuffled;
   }
 
-/*   handleNextQuestion() {
+  /*   handleNextQuestion() {
     const { idx } = this.state;
     this.setState({
       idx: idx + 1,
@@ -198,10 +191,9 @@ class Game extends React.Component {
   }
 
   render() {
-    const { stopTime /* toggle, disabled */ } = this.state;
+    const { stopTime, toggle, disabled } = this.state;
     const { infoQuestions } = this.props;
     const { results } = infoQuestions;
-    const lupalupa = this.renderBottons(0);
     return (
       <div>
         <Header />
@@ -214,17 +206,13 @@ class Game extends React.Component {
           && <p data-testid="question-category">{ results[0].category }</p>}
         { infoQuestions
           && <p data-testid="question-text">{ results[0].question }</p>}
-        { infoQuestions && lupalupa }
-        { stopTime
-        && (
-          <button
-            type="button"
-            onClick={ this.handleNextQuestion }
-            data-testid="btn-next"
-          >
-            Próxima
-          </button>)}
-        <ButtonGame />
+        <Buttons
+          randomAnwser={ this.randomAnwser }
+          handleClick={ this.handleClick }
+          toggle={ toggle }
+          disabled={ disabled }
+        />
+        { stopTime && <ButtonGame /> }
       </div>
     );
   }
@@ -241,6 +229,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   dispatchSetToken: (token) => dispatch(setToken(token)),
   addPoint: (point) => dispatch(setScore(point)),
+  dispatchSetRandomAnswer: (answer) => dispatch(setRandomAnswer(answer)),
 });
 
 Game.propTypes = {
@@ -250,6 +239,7 @@ Game.propTypes = {
   addPoint: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   gravatarEmail: PropTypes.string.isRequired,
+  dispatchSetRandomAnswer: PropTypes.func.isRequired,
 };
 
 Game.defaultProps = {
@@ -257,10 +247,3 @@ Game.defaultProps = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
-
-/* <Buttons
-randomAnwser={ this.randomAnwser }
-handleClick={ this.handleClick }
-toggle={ toggle }
-disabled={ disabled }
-/> */

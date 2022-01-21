@@ -1,7 +1,8 @@
-import { SET_TIME } from '../actions';
+import { SET_TIME, SET_RANDOM_ANSWER } from '../actions';
 
 const INITIAL_STATE = {
   time: 0,
+  answer: [],
 };
 
 const getTime = (state = INITIAL_STATE, action) => {
@@ -10,6 +11,11 @@ const getTime = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       time: action.payload,
+    };
+  case SET_RANDOM_ANSWER:
+    return {
+      ...state,
+      answer: action.payload,
     };
   default:
     return state;
