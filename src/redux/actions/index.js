@@ -27,3 +27,29 @@ export const SET_QUESTIONS = 'SET_QUESTIONS';
 export const setQuestions = (payload) => ({
   type: SET_QUESTIONS, payload,
 });
+
+export const SET_TIME = 'SET_TIME';
+
+export const setTime = (payload) => ({
+  type: SET_TIME, payload,
+});
+
+export const SET_SCORE = 'SET_SCORE';
+
+export const setScore = (payload) => ({
+  type: SET_SCORE, payload,
+});
+
+export const RESET_SCORE = 'RESET_SCORE';
+
+export const resetScore = (payload) => ({
+  type: RESET_SCORE,
+  payload,
+});
+
+export const SET_RANDOM_ANSWER = 'SET_RANDOM_ANSWER';
+
+export const setRandomAnswer = (payload) => ({
+  type: SET_RANDOM_ANSWER,
+  payload,
+});

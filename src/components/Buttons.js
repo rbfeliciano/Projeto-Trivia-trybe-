@@ -4,6 +4,11 @@ import { connect } from 'react-redux';
 import '../css/style.css';
 
 export class Buttons extends Component {
+  componentDidMount() {
+    const { randomAnwser } = this.props;
+    randomAnwser(0);
+  }
+
   buttonCorrect = (e, i) => {
     const { toggle, handleClick, disabled } = this.props;
     return (
@@ -36,14 +41,22 @@ export class Buttons extends Component {
     );
   }
 
-  render() {
-    const { infoQuestions: { results }, randomAnwser } = this.props;
+  renderBottons = () => {
+    const { infoQuestions: { results }, answer } = this.props;
     const { infoQuestions } = this.props;
     return (
       <div data-testid="answer-options">
-        {infoQuestions && randomAnwser(0).map((e, i) => ((results[0].correct_answer === e)
+        {infoQuestions && answer.map((e, i) => ((results[0].correct_answer === e)
           ? this.buttonCorrect(e, i) : this.buttonIncorrect(e, i)
         ))}
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        { this.renderBottons() }
       </div>
     );
   }
@@ -51,6 +64,7 @@ export class Buttons extends Component {
 
 const mapStateToProps = (state) => ({
   infoQuestions: state.player.questions,
+  answer: state.game.answer,
 });
 
 Buttons.propTypes = {
@@ -59,6 +73,7 @@ Buttons.propTypes = {
   toggle: PropTypes.bool.isRequired,
   disabled: PropTypes.bool.isRequired,
   handleClick: PropTypes.func.isRequired,
+  answer: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default connect(mapStateToProps)(Buttons);

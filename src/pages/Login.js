@@ -6,6 +6,7 @@ import {
   setName,
   setEmail,
   setQuestions,
+  resetScore,
 } from '../redux/actions/index';
 
 class Login extends React.Component {
@@ -45,6 +46,7 @@ class Login extends React.Component {
       dispatchSetName,
       dispatchSetEmail,
       dispatchSetQuestions,
+      resetScoreAction,
     } = this.props;
 
     const {
@@ -69,7 +71,8 @@ class Login extends React.Component {
       localStorage.setItem('token', newToken);
       dispatchSetToken(newToken);
       dispatchSetQuestions(newQuestion);
-
+      const startScore = 0;
+      resetScoreAction(startScore);
       const { history } = this.props;
       history.push('/game');
     }
@@ -198,6 +201,7 @@ Login.propTypes = {
   dispatchSetEmail: PropTypes.func.isRequired,
   // dispatchSetRequestToken: PropTypes.func.isRequired,
   dispatchSetQuestions: PropTypes.func.isRequired,
+  resetScoreAction: PropTypes.func.isRequired,
 };
 
 Login.defaultProps = {
@@ -210,6 +214,7 @@ const mapDispatchToProps = (dispatch) => ({
   dispatchSetEmail: (email) => dispatch(setEmail(email)),
   // dispatchSetRequestToken: (request) => dispatch(setRequestToken(request)),
   dispatchSetQuestions: (question) => dispatch(setQuestions(question)),
+  resetScoreAction: (score) => dispatch(resetScore(score)),
 });
 
 const mapStateToProps = (state) => ({
