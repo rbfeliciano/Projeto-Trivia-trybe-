@@ -3,6 +3,8 @@ import {
   SET_EMAIL,
   // SET_REQUEST_TOKEN,
   SET_QUESTIONS,
+  SET_SCORE,
+  RESET_SCORE,
 } from '../actions/index';
 
 const initialState = {
@@ -15,6 +17,8 @@ const initialState = {
 };
 
 function setPlayerData(state = initialState, action) {
+  console.log(action.payload, 'sou a action');
+  console.log(state.score, 'sou o score global');
   switch (action.type) {
   case SET_NAME:
     return { ...state, name: action.payload };
@@ -24,6 +28,10 @@ function setPlayerData(state = initialState, action) {
   //   return { ...state, requestToken: action.payload };
   case SET_QUESTIONS:
     return { ...state, questions: action.payload };
+  case SET_SCORE:
+    return { ...state, score: state.score + action.payload };
+  case RESET_SCORE:
+    return { ...state, score: action.payload };
   default:
     return state;
   }

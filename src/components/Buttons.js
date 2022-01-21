@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import '../css/style.css';
 
 export class Buttons extends Component {
-  buttonCorrect = (e, i) => {
+ /*  buttonCorrect = (e, i) => {
     const { toggle, handleClick, disabled } = this.props;
     return (
       <button
@@ -36,15 +36,31 @@ export class Buttons extends Component {
     );
   }
 
-  render() {
+  renderBottons = (n) => {
     const { infoQuestions: { results }, randomAnwser } = this.props;
     const { infoQuestions } = this.props;
     return (
       <div data-testid="answer-options">
-        {infoQuestions && randomAnwser(0).map((e, i) => ((results[0].correct_answer === e)
+        {infoQuestions && randomAnwser(n).map((e, i) => ((results[n].correct_answer === e)
           ? this.buttonCorrect(e, i) : this.buttonIncorrect(e, i)
         ))}
       </div>
+    );
+  } */
+
+  render() {
+/*     const { infoQuestions: { results }, randomAnwser } = this.props;
+    const { infoQuestions } = this.props;
+    const { bottons } = this.state; */
+    return (
+      <div>
+       {/*  { bottons } */}
+      </div>
+      /*  {<div data-testid="answer-options">
+        {infoQuestions && randomAnwser(0).map((e, i) => ((results[0].correct_answer === e)
+          ? this.buttonCorrect(e, i) : this.buttonIncorrect(e, i)
+        ))}
+      </div>} */
     );
   }
 }

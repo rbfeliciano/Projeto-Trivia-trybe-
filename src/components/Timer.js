@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { setTime } from '../redux/actions';
 
 export class Timer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      segunds: 30,
+      seconds: 30,
+      bool: false,
     };
   }
 
@@ -13,29 +16,37 @@ export class Timer extends Component {
     this.startTimer();
   }
 
-  componentDidUpdate(_, prevState) {
-    const { stopTime, allTrues } = this.props;
+  componentDidUpdate(_prevProps, prevState) {
+    const { stopTime, allTrues, getTime } = this.props;
     if (stopTime) {
       clearInterval(this.time);
+      if (prevState.bool === false) {
+        getTime(prevState.seconds);
+        this.bool();
+      }
     }
-    if (prevState.segunds === 1) {
+    if (prevState.seconds === 1) {
       clearInterval(this.time);
-      allTrues();
+      allTrues(prevState);
     }
+  }
+
+  bool = () => {
+    this.setState({ bool: true });
   }
 
   startTimer = () => {
     const ONE_SECOND = 1000;
     this.time = setInterval(() => {
-      this.setState((prevState) => ({ segunds: prevState.segunds - 1 }));
+      this.setState((prevState) => ({ seconds: prevState.seconds - 1 }));
     }, ONE_SECOND);
   }
 
   render() {
-    const { segunds } = this.state;
+    const { seconds } = this.state;
     return (
       <div>
-        { segunds }
+        { seconds }
       </div>
     );
   }
@@ -45,4 +56,8 @@ Timer.propTypes = {
   stopTime: PropTypes.bool,
 }.isRequired;
 
-export default Timer;
+const mapDispatchToProps = (dispatch) => ({
+  getTime: (time) => dispatch(setTime(time)),
+});
+
+export default connect(null, mapDispatchToProps)(Timer);
