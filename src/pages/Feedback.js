@@ -8,7 +8,7 @@ export default class Feedback extends React.Component {
     const getLocalStorage = (localStorage.getItem('state') !== null)
       ? JSON.parse(localStorage.getItem('state'))
       : { player: { assertions: '', score: '' } };
-    console.log(getLocalStorage);
+    // console.log(getLocalStorage);
     const { assertions, score } = getLocalStorage.player;
     const ok = 3;
     const feedbackMessage = (assertions >= ok) ? 'Well Done!' : 'Could be better...';
