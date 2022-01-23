@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import md5 from 'crypto-js/md5';
+import '../css/style.css';
 
 import Header from '../components/Header';
 import { setToken, setScore, setRandomAnswer } from '../redux/actions/index';
-import Buttons from '../components/Buttons';
-import ButtonGame from '../components/ButtonGame';
+import ButtonNext from '../components/ButtonNext';
 import Timer from '../components/Timer';
 
 class Game extends React.Component {
@@ -16,6 +17,7 @@ class Game extends React.Component {
       toggle: false,
       disabled: false,
       idx: 0,
+      nextQuestion: true,
     };
   }
 
@@ -31,6 +33,10 @@ class Game extends React.Component {
     };
 
     localStorage.setItem('state', JSON.stringify(state));
+    if (!localStorage.getItem('ranking')) {
+      const ranking = [];
+      localStorage.setItem('ranking', JSON.stringify(ranking));
+    }
   }
 
   handleClick = ({ target }) => {
@@ -106,113 +112,83 @@ class Game extends React.Component {
     this.setState({ disabled: true });
   }
 
-  randomAnwser = (n) => {
-    const { infoQuestions, dispatchSetRandomAnswer } = this.props;
-    const { results } = infoQuestions;
-    const arrRandomAnswer = [
-      results[n].correct_answer,
-      ...results[n].incorrect_answers,
-    ];
-
-    let order = [];
-    const numberOfAnswer = 4;
-    for (let i = 0; i < numberOfAnswer; i += 1) {
-      order.push(i);
-    }
-
-    order = this.shuffle(order);
-    const newArrRandomAnswer = arrRandomAnswer.map((e, i) => {
-      const newAnswer = arrRandomAnswer[order[i]];
-      return newAnswer;
-    });
-
-    dispatchSetRandomAnswer(newArrRandomAnswer);
-  }
-
-  shuffle = (array) => {
-    const numberRandom = 0.5;
-    const shuffled = array.sort(() => Math.random() - numberRandom);
-    return shuffled;
-  }
-
-  /*   handleNextQuestion() {
+  handleNextQuestion = () => {
+    const MAX_ARRAY = 4;
     const { idx } = this.state;
+    const { name, score, gravatarEmail, history } = this.props;
+
+    if (idx === MAX_ARRAY) {
+      const ranking = JSON.parse(localStorage.getItem('ranking'));
+      const rankingPlayer = {
+        name,
+        score,
+        picture: `https://www.gravatar.com/avatar/${md5(gravatarEmail).toString()}`,
+      };
+      const newRanking = [...ranking, rankingPlayer];
+      localStorage.setItem('ranking', JSON.stringify(newRanking));
+      return history.push('/feedback');
+    }
+    this.setState({ nextQuestion: false });
     this.setState({
       idx: idx + 1,
       stopTime: false,
       toggle: false,
       disabled: false,
-    });
-  } */
-
-  buttonCorrect = (e, i) => {
-    const { toggle, disabled } = this.state;
-    return (
-      <button
-        data-testid="correct-answer"
-        type="button"
-        className={ toggle && 'correct' }
-        key={ i }
-        onClick={ this.handleClick }
-        disabled={ disabled }
-      >
-        { e }
-      </button>
-    );
+    }, () => this.setState({ nextQuestion: true }));
   }
 
-  buttonIncorrect = (e, i) => {
-    const { toggle, disabled } = this.state;
-    return (
-      <button
-        data-testid={ `wrong-answer-${i}` }
-        type="button"
-        className={ toggle && 'incorrect' }
-        key={ i }
-        onClick={ this.handleClick }
-        disabled={ disabled }
-      >
-        { e }
-      </button>
-    );
-  }
-
-  renderBottons = (n) => {
+  renderBottonsQuestion() {
+    const { idx, toggle, disabled } = this.state;
     const { infoQuestions: { results } } = this.props;
-    const { infoQuestions } = this.props;
-    return (
-      <div data-testid="answer-options">
-        {infoQuestions && this.randomAnwser(n).map((e, i) => (
-          (results[n].correct_answer === e)
-            ? this.buttonCorrect(e, i) : this.buttonIncorrect(e, i)
-        ))}
-      </div>
-    );
+    if (results !== []) {
+      const correctAnswer = ([
+        <button
+          onClick={ this.handleClick }
+          className={ toggle && 'correct' }
+          type="button"
+          data-testid="correct-answer"
+          key=""
+          disabled={ disabled }
+        >
+          { results[idx].correct_answer }
+        </button>]);
+      const incorrctAnswers = results[idx].incorrect_answers.map((answer, i) => (
+        <button
+          onClick={ this.handleClick }
+          className={ toggle && 'incorrect' }
+          type="button"
+          data-testid={ `wrong-answer-${i}` }
+          key={ i }
+          disabled={ disabled }
+        >
+          { answer }
+        </button>
+      ));
+
+      const arrayQuestions = [...correctAnswer, ...incorrctAnswers];
+      const HALF = 0.5;
+      return (
+        <div data-testid="answer-options">
+          <p data-testid="question-category">{ results[idx].category }</p>
+          <h3 data-testid="question-text">{ results[idx].question }</h3>
+          {arrayQuestions.sort(() => Math.round(Math.random()) - HALF)}
+        </div>
+      );
+    }
   }
 
   render() {
-    const { stopTime, toggle, disabled } = this.state;
-    const { infoQuestions } = this.props;
-    const { results } = infoQuestions;
+    const { stopTime, nextQuestion } = this.state;
     return (
       <div>
         <Header />
-        <Timer
+        { nextQuestion && <Timer
           stopTime={ stopTime }
           allTrues={ this.allTrues }
           getTime={ this.getTime }
-        />
-        { infoQuestions
-          && <p data-testid="question-category">{ results[0].category }</p>}
-        { infoQuestions
-          && <p data-testid="question-text">{ results[0].question }</p>}
-        <Buttons
-          randomAnwser={ this.randomAnwser }
-          handleClick={ this.handleClick }
-          toggle={ toggle }
-          disabled={ disabled }
-        />
-        { stopTime && <ButtonGame /> }
+        />}
+        { this.renderBottonsQuestion() }
+        { stopTime && <ButtonNext handleNextQuestion={ this.handleNextQuestion } /> }
       </div>
     );
   }
@@ -224,6 +200,8 @@ const mapStateToProps = (state) => ({
   score: state.player.score,
   name: state.player.name,
   gravatarEmail: state.player.gravatarEmail,
+  answer: state.game.answer,
+  request: state.token.request,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -239,11 +217,15 @@ Game.propTypes = {
   addPoint: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   gravatarEmail: PropTypes.string.isRequired,
-  dispatchSetRandomAnswer: PropTypes.func.isRequired,
+  history: PropTypes.oneOfType(PropTypes.string),
 };
 
 Game.defaultProps = {
   infoQuestions: '',
+};
+
+Game.defaultProps = {
+  history: '',
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

@@ -14,14 +14,13 @@ const initialState = {
   gravatarEmail: '',
   // requestToken: '',
   questions: '',
+  request: false,
 };
 
 function setPlayerData(state = initialState, action) {
-  console.log(action.payload, 'sou a action');
-  console.log(state.score, 'sou o score global');
   switch (action.type) {
   case SET_NAME:
-    return { ...state, name: action.payload };
+    return { ...state, name: action.payload, request: true };
   case SET_EMAIL:
     return { ...state, gravatarEmail: action.payload };
   // case SET_REQUEST_TOKEN:
